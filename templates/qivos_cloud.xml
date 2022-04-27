@@ -1,0 +1,37 @@
+<templateSet group="qivos_cloud">
+  <template name="filterRe" value="@Stateless&#10;@SearchFilterResolverDefintion(criteriaType = TagEssentialCriteria.TYPE)&#10;public class TagEssentialFilterResolver extends SearchFilterResolver&lt;TagEssentialCriteria, TagDataFilter&gt; {&#10;&#10;    @Override&#10;    public TagDataFilter createFilter(Integer pageNumber, Integer pageSize, FilterSortField orderBy) {&#10;        return new TagDataFilter(pageNumber, pageSize, orderBy);&#10;    }&#10;&#10;    @Override&#10;    public TagDataFilter updateFilter(TagDataFilter filter, TagEssentialCriteria criteria) {&#10;        filter.setTagTargetEnum(criteria.getTagType());&#10;        return filter;&#10;    }&#10;}" description="FilterResolver extender" toReformat="false" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="queryEx" value="@Stateless&#10;@SearchQueryExecutorQualifier(appliesTo = StorePos.class)&#10;public class StorePosQueryExecutor extends SearchQueryExecutor&lt;StorePos, StorePosDataFilter&gt; {&#10;&#10;    @Inject&#10;    private StorePosDataService storePosDataService;&#10;&#10;    @Override&#10;    public DataFilterResult&lt;StorePos&gt; executeQuery(StorePosDataFilter filter) {&#10;        return storePosDataService.executeFilterQuery(filter);&#10;    }&#10;&#10;    @Override&#10;    public Class&lt;StorePos&gt; appliesTo() {&#10;        return StorePos.class;&#10;    }&#10;&#10;}&#10;" description="queryExectuor extender" toReformat="false" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="filterSer" value="    @Override&#10;    protected Class&lt;Tag&gt; getRootClazz() {&#10;        return  Tag.class;&#10;    }&#10;&#10;    @Override&#10;    protected List&lt;Predicate&gt; addConcreteFilterPredicates(CriteriaQuery cq, DataFilter filter) {&#10;        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();&#10;        final CriteriaQuery&lt;PreferredBrandUtil&gt; cq = cb.createQuery(PreferredBrandUtil.class);&#10;        final Root&lt;LoyaltyInvoice&gt; loyaltyInvoiceRoot = cq.from(LoyaltyInvoice.class);&#10;        final Join&lt;LoyaltyInvoice, LoyaltyInvoiceLine&gt; invoiceLineJoin = loyaltyInvoiceRoot.join(LoyaltyInvoice_.loyaltyInvoiceLineList);&#10;        final Join&lt;LoyaltyInvoiceLine, Product&gt; productJoin = invoiceLineJoin.join(LoyaltyInvoiceLine_.product);&#10;        final Join&lt;Product, TableProductBrand&gt; brandJoin = productJoin.join(Product_.tableProductBrand);&#10;&#10;        final List&lt;Predicate&gt; predicates = new ArrayList&lt;&gt;();&#10;        predicates.add(cb.equal(loyaltyInvoiceRoot.get(LoyaltyInvoice_.loyaltyMember).get(LoyaltyMember.FIELD_ID), lm.getId().toString()));&#10;        predicates.add(cb.greaterThanOrEqualTo(loyaltyInvoiceRoot.get(LoyaltyInvoice_.invoiceDate), lookUpDate));&#10;        predicates.add(cb.greaterThan(invoiceLineJoin.get(LoyaltyInvoiceLine_.lineAmount), BigDecimal.ZERO));&#10;        predicates.add(cb.isNotNull(productJoin.get(Product_.tableProductBrand)));&#10;        cq.where(predicates.toArray(new Predicate[]{}));&#10;&#10;        cq.select(cb.construct(PreferredBrandUtil.class,&#10;                brandJoin,&#10;                cb.sum(invoiceLineJoin.get(LoyaltyInvoiceLine_.lineAmount))&#10;                )&#10;        );&#10;        cq.groupBy(brandJoin);&#10;        cq.orderBy(cb.desc(cb.sum(invoiceLineJoin.get(LoyaltyInvoiceLine_.lineAmount))));&#10;        TypedQuery&lt;PreferredBrandUtil&gt; datos = entityManager.createQuery(cq);&#10;        return datos.getResultList();&#10;    }" description="filterService methods" toReformat="false" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="searchRes" value="public class TagSearchResponse implements APIResponseDTO {&#10;&#10;    private TagBaseDTO essentials;&#10;    private BrandTagBaseDTO brandData;&#10;&#10;&#10;    public TagBaseDTO getEssentials() {&#10;        return essentials;&#10;    }&#10;&#10;    public void setEssentials(TagBaseDTO essentials) {&#10;        this.essentials = essentials;&#10;    }&#10;&#10;    @Override&#10;    @JsonIgnore&#10;    public Date getLastModificationDate() {&#10;        return null;&#10;    }&#10;&#10;    @Override&#10;    public void setLastModificationDate(Date date) {&#10;        //NOOP&#10;    }&#10;}" description="searchResponse  example" toReformat="false" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="searchPay" value="public class TagSearchResponsePayload extends SearchPayload&lt;TagSearchResponse&gt; {&#10;&#10;&#10;    public TagSearchResponsePayload(List&lt;TagSearchResponse&gt; data, Boolean hasMore, Long totalCount) {&#10;        super(data, hasMore, totalCount);&#10;    }&#10;}&#10;" description="searchPayload example" toReformat="false" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="apiSearchC" value="    @Inject&#10;    private APISearchController searchController;" description="apiSearchController Injection" toReformat="false" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+  <template name="validationC" value="    @Inject&#10;    private APIValidationController validationController;" description="APIValidationController injection" toReformat="false" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
+</templateSet>
