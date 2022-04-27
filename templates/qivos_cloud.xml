@@ -34,4 +34,9 @@
       <option name="JAVA_CODE" value="true" />
     </context>
   </template>
+  <template name="lookupC" value="    @Inject&#10;    private LookupController lookupController;" description="LookupController injection" toReformat="false" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
 </templateSet>
