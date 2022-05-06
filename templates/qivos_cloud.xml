@@ -39,4 +39,9 @@
       <option name="JAVA_CODE" value="true" />
     </context>
   </template>
+  <template name="searchEnv" value="public class CouponSetSearchResponseEnvelope extends APIResponseSearchEnvelope&lt;CouponSetSearchResponsePayload&gt; {&#10;    &#10;    public CouponSetSearchResponseEnvelope(CouponSetSearchResponsePayload payload) {&#10;        super(payload);&#10;    }&#10;    &#10;}&#10;" description="search envelope example" toReformat="false" toShortenFQNames="true">
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
 </templateSet>
