@@ -69,4 +69,10 @@
       <option name="JAVA_CODE" value="true" />
     </context>
   </template>
+  <template name="clo" value="private static final CloudbizLogger CLOG = CloudbizLogger.init($ClassName$.class);" description="cloudbizlogger" toReformat="false" toShortenFQNames="true">
+    <variable name="ClassName" expression="className()" defaultValue="className" alwaysStopAt="false" />
+    <context>
+      <option name="JAVA_CODE" value="true" />
+    </context>
+  </template>
 </templateSet>
